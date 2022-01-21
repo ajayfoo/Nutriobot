@@ -63,9 +63,6 @@ dependencies {
     implementation "com.android.volley:volley:1.2.1"
     //tensorflow lite support library
     implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0'
-    //implementation "org.tensorflow:tensorflow-lite:2.7.0"
-    //implementation "org.tensorflow:tensorflow-lite-gpu:2.4.0"
-    //implementation "org.tensorflow:tensorflow-lite-support:0.3.0"
     //task lib
     implementation "org.tensorflow:tensorflow-lite-task-vision:0.3.0"
     implementation "org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.3.0"
