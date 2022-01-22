@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/cameraFragment">
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.ajayk.nutriobot.CameraFragment"
+        android:label="CameraFragment" >
+        <action
+            android:id="@+id/action_cameraFragment_to_infoFragment"
+            app:destination="@id/infoFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.ajayk.nutriobot.InfoFragment"
+        android:label="InfoFragment" >
+        <action
+            android:id="@+id/action_infoFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment"
+            app:popUpTo="@id/infoFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="imagePath"
+            app:argType="string" />
+        <argument
+            android:name="permsGranted"
+            app:argType="boolean" />
+    </fragment>
+</navigation>

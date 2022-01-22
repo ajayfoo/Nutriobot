@@ -1,88 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/camera_capture_button"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/camera_pic"
-        android:contentDescription="@string/take_the_picture"
-        android:elevation="2dp"
-        android:scaleType="fitCenter"
-        android:visibility="visible"
-        app:iconPadding="5dp"
-        app:iconSize="45sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="SpeakableTextPresentCheck"
-        tools:visibility="gone" />
-
-    <TextView
-        android:id="@+id/fruit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/roboto"
-        android:text="@string/finding"
-        android:textAllCaps="true"
-        android:textSize="25sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.761"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="317dp"
-        android:layout_height="308dp"
-        android:fontFamily="@font/roboto"
-        android:text="@string/loading"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/backButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.469"
-        tools:visibility="visible" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/backButton"
-        android:layout_width="79dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="15dp"
-        android:contentDescription="@string/back"
-        android:visibility="invisible"
-        app:icon="@drawable/left_back_arrow"
-        app:iconTint="@color/primaryDarkColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.944"
-        tools:visibility="visible" />
-
-    <androidx.camera.view.PreviewView
-        android:id="@+id/viewFinder"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/main_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-150dp"
-        tools:visibility="gone">
-
-    </androidx.camera.view.PreviewView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent">
+        <fragment
+            android:id="@+id/myNavHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation"
+            tools:layout="@layout/fragment_camera" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
