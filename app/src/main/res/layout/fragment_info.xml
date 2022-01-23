@@ -22,14 +22,13 @@
             android:text="@string/finding"
             android:textAllCaps="true"
             android:textSize="25sp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.086"
-            tools:visibility="visible" />
+            app:layout_constraintVertical_bias="0.086" />
 
         <TextView
             android:id="@+id/info"
@@ -43,12 +42,11 @@
             android:text="@string/loading"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/backButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fruit"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@+id/fruit" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/backButton"
@@ -59,13 +57,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:contentDescription="@string/back"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:icon="@drawable/left_back_arrow"
             app:iconTint="@color/primaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fruit"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@+id/fruit" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

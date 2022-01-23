@@ -6,12 +6,10 @@
     <string name="take_the_picture">Take the picture</string>
     <string name="request_failed">Failed to retrieve info. Please make sure your Mobile Data or WiFi is On</string>
     <string name="loading">Loading…</string>
-    <string name="cam_perm_not_granted">Permission error</string>
-    <string name="cam_perm_help">Please restart the app and grant camera access or if you clicked "Deny" on the prompt close the app and
-        go to Settings>Apps>Nutriobot>Permissions>Camera and Click Allow and try again.</string>
+    <string name="cam_perm_not_granted">Can\'t access camera </string>
+    <string name="cam_perm_help">Please press back button and grant camera access or go to Settings>Apps>Nutriobot>Permissions>Camera and Click Allow and try again.</string>
     <string name="unidentified">UNIDENTIFIED</string>
     <string name='unidentified_info'>The object is not a fruit/vegetable or it is not in Nutriobot\'s list of identifiable fruit, it will soon be added :)</string>
     <string name="soon">Vegetable information will be soon added</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
