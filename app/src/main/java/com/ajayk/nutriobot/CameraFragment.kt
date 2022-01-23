@@ -10,12 +10,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
@@ -35,41 +37,40 @@ class CameraFragment : Fragment() {
     private lateinit var imgFile: File
     private lateinit var fragContext: Context
     private lateinit var fragActivity:FragmentActivity
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         binding= FragmentCameraBinding.inflate(layoutInflater)
-        fragContext=requireContext()
-        fragActivity=requireActivity()
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        fragContext=context
+        fragActivity=requireActivity()
+        outputDirectory = getOutputDirectory()
+        cameraExecutor = Executors.newSingleThreadExecutor()
+        requestPermissionLauncher=registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                isGranted: Boolean ->
+            if (isGranted){
+                startCamera()
+            }else{
+                Toast.makeText(fragContext,"Camera access is needed to use this app",Toast.LENGTH_LONG).show()
+            }
+        }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        askCameraAccess()
+        checkAndRequestPermission()
         binding.cameraCaptureButton.setOnClickListener {
             captureButtonListener()
-        }
-        outputDirectory = getOutputDirectory()
-        cameraExecutor = Executors.newSingleThreadExecutor()
-    }
-    private fun askCameraAccess(){
-        if (allPermissionsGranted()) {
-            startCamera()
-        } else {
-            ActivityCompat.requestPermissions(fragActivity, REQUIRED_PERMISSIONS,
-                REQUEST_CODE_PERMISSIONS)
         }
     }
     companion object {
         private const val TAG = "CameraXBasic"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-    }
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            fragContext, it
-        ) == PackageManager.PERMISSION_GRANTED
+        private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
     }
     private fun getOutputDirectory(): File {
         val mediaDir = fragActivity.externalMediaDirs?.firstOrNull()?.let {
@@ -79,6 +80,19 @@ class CameraFragment : Fragment() {
             mediaDir else {
             fragActivity.filesDir
         }
+    }
+    private fun checkAndRequestPermission(){
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(fragContext, REQUIRED_PERMISSION) -> {
+                startCamera()
+            }
+            else -> {
+                requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+            }
+        }
+    }
+    private fun isPermissionGranted():Boolean{
+        return ContextCompat.checkSelfPermission(fragContext, REQUIRED_PERMISSION) == PackageManager.PERMISSION_GRANTED
     }
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(fragContext)
@@ -120,10 +134,9 @@ class CameraFragment : Fragment() {
                 }
             }
         )
-        Log.i("FunInfo","takePhoto() after takePicture")
     }
     private fun captureButtonListener() {
-        val isPermsGranted=allPermissionsGranted()
+        val isPermsGranted=isPermissionGranted()
         if(isPermsGranted){
             takePhoto()
             val action = CameraFragmentDirections.actionCameraFragmentToInfoFragment(imgFile.absolutePath,isPermsGranted)
