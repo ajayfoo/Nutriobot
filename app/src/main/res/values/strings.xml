@@ -10,6 +10,10 @@
     <string name="cam_perm_help">Please press back button and grant camera access or go to Settings>Apps>Nutriobot>Permissions>Camera and Click Allow and try again.</string>
     <string name="unidentified">UNIDENTIFIED</string>
     <string name='unidentified_info'>The object is not a fruit/vegetable or it is not in Nutriobot\'s list of identifiable fruit, it will soon be added :)</string>
-    <string name="soon">Vegetable information will be soon added</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="soon">Nutritional information will be soon added</string>
+    <string name="carbohydrates">CARBOHYDRATES</string>
+    <string name="protein">PROTEIN</string>
+    <string name="fat">FAT</string>
+    <string name="calories">CALORIES</string>
+    <string name="sugar">SUGAR</string>
 </resources>

@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajayk.nutriobot.databinding.FragmentInfoBinding
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -40,6 +39,8 @@ class InfoFragment : Fragment() {
     }
     private fun backButtonListener() {
         binding.backButton.findNavController().navigate(R.id.action_infoFragment_to_cameraFragment)
+        binding.nutriInfo.visibility=View.INVISIBLE
+        binding.info.visibility=View.VISIBLE
     }
     private fun initiateInfo(permsGranted:Boolean) {
         if(!permsGranted) {
@@ -51,9 +52,9 @@ class InfoFragment : Fragment() {
             while(!imgFile.exists()){
                 delay(500)
             }
-            val classifier = Classifier(infoFragContext)
-            val result = classifier.filteredPrediction(imgFile)
-            setInfo(result, infoFragContext)
+            //val classifier = Classifier(infoFragContext)
+            //val result = classifier.filteredPrediction(imgFile)
+            setInfo(Pair(1,"apple"), infoFragContext)
             imgFile.delete()
         }
     }
@@ -65,10 +66,10 @@ class InfoFragment : Fragment() {
         else{
             binding.fruit.text=result.second
             if(result.first==1){
-                lifecycleScope.launch(Dispatchers.IO){
+                lifecycleScope.launch{
                     result.second?.let { FruityResponse.requestFruitInfo(it, context ) }
-                    FruityResponse.formatFruitInfo(binding.info, context)
-                }
+                    FruityResponse.formatFruitInfo(context,binding)
+                    }
             }
             else{
                 binding.info.text=getText(R.string.soon)

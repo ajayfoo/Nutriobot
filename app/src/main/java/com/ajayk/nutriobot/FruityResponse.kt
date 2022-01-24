@@ -1,7 +1,8 @@
 package com.ajayk.nutriobot
 
 import android.content.Context
-import android.widget.TextView
+import android.view.View
+import com.ajayk.nutriobot.databinding.FragmentInfoBinding
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -25,23 +26,33 @@ class FruityResponse {
             queue.add(stringRequest)
         }
 
-        suspend fun formatFruitInfo(textView: TextView, context: Context) {
+        suspend fun formatFruitInfo(context: Context,binding:FragmentInfoBinding) {
             while (responseString == "") {
                 delay(1000)
             }
             if(responseString==context.getText(R.string.request_failed).toString()){
-                textView.text= responseString
+                binding.info.text= responseString
                 return
             }
+            binding.info.visibility=View.INVISIBLE
+            binding.nutriInfo.visibility= View.VISIBLE
             val jsonStr= responseString
             val fruitInfoJson=JSONTokener(jsonStr).nextValue() as JSONObject
             val nutritionJson=fruitInfoJson.getJSONObject("nutritions")
             val nutritionArray=arrayOf("carbohydrates","protein","fat","calories","sugar")
-            var fruitInfoStr=""
+            var i=0
             for (item in nutritionArray){
-                fruitInfoStr+="\n${item.uppercase()} : ${nutritionJson.getString(item)}"
+                val finalValue="\t\t\t${nutritionJson.getString(item)}"
+                val nutritionValueView=when(i){
+                    0->binding.r1c2
+                    1->binding.r2c2
+                    2->binding.r3c2
+                    3->binding.r4c2
+                    else->binding.r5c2
+                }
+                i+=1
+                nutritionValueView.text=finalValue
             }
-            textView.text=fruitInfoStr
         }
     }
 }
