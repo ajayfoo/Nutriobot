@@ -11,7 +11,6 @@ import org.json.JSONObject
 import org.json.JSONTokener
 
 class FruityResponse {
-    companion object {
         private var responseString:String=""
         fun requestFruitInfo(fruitName: String, context: Context) {
             val queue = Volley.newRequestQueue(context)
@@ -54,5 +53,4 @@ class FruityResponse {
                 nutritionValueView.text=finalValue
             }
         }
-    }
 }

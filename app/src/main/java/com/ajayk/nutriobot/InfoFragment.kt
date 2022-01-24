@@ -38,9 +38,9 @@ class InfoFragment : Fragment() {
         Log.i("CAM_PERMISSION",args.permsGranted.toString())
     }
     private fun backButtonListener() {
-        binding.backButton.findNavController().navigate(R.id.action_infoFragment_to_cameraFragment)
         binding.nutriInfo.visibility=View.INVISIBLE
         binding.info.visibility=View.VISIBLE
+        binding.backButton.findNavController().navigate(R.id.action_infoFragment_to_cameraFragment)
     }
     private fun initiateInfo(permsGranted:Boolean) {
         if(!permsGranted) {
@@ -52,9 +52,9 @@ class InfoFragment : Fragment() {
             while(!imgFile.exists()){
                 delay(500)
             }
-            //val classifier = Classifier(infoFragContext)
-            //val result = classifier.filteredPrediction(imgFile)
-            setInfo(Pair(1,"apple"), infoFragContext)
+            val classifier = Classifier(infoFragContext)
+            val result = classifier.filteredPrediction(imgFile)
+            setInfo(result, infoFragContext)
             imgFile.delete()
         }
     }
@@ -67,8 +67,9 @@ class InfoFragment : Fragment() {
             binding.fruit.text=result.second
             if(result.first==1){
                 lifecycleScope.launch{
-                    result.second?.let { FruityResponse.requestFruitInfo(it, context ) }
-                    FruityResponse.formatFruitInfo(context,binding)
+                    val fruityResponse=FruityResponse()
+                    result.second?.let { fruityResponse.requestFruitInfo(it, context ) }
+                    fruityResponse.formatFruitInfo(context,binding)
                     }
             }
             else{
