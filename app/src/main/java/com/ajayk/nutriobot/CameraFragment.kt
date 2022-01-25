@@ -2,16 +2,17 @@ package com.ajayk.nutriobot
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -19,10 +20,12 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.ajayk.nutriobot.databinding.FragmentCameraBinding
+import com.yalantis.ucrop.UCrop
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,10 +37,13 @@ class CameraFragment : Fragment() {
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-    private lateinit var imgFile: File
     private lateinit var fragContext: Context
     private lateinit var fragActivity:FragmentActivity
+    private lateinit var imgFile:File
+    private lateinit var croppedImgFile:File
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var cropImageLauncher:ActivityResultLauncher<Any?>
+    private lateinit var cameraProvider: ProcessCameraProvider
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
@@ -51,6 +57,12 @@ class CameraFragment : Fragment() {
         fragActivity=requireActivity()
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
+        imgFile = File.createTempFile(
+            "IMG_${SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())}",
+            ".jpg", outputDirectory)
+        croppedImgFile = File.createTempFile(
+            "IMG_${SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())}",
+            ".jpg", outputDirectory)
         requestPermissionLauncher=registerForActivityResult(ActivityResultContracts.RequestPermission()){
                 isGranted: Boolean ->
             if (isGranted){
@@ -59,13 +71,34 @@ class CameraFragment : Fragment() {
                 Toast.makeText(fragContext,"Camera access is needed to use this app",Toast.LENGTH_LONG).show()
             }
         }
+        val cropImageContract=object: ActivityResultContract<Any?,Uri?>(){
+            override fun createIntent(context: Context, input: Any?): Intent {
+                val options=UCrop.Options()
+                options.setCompressionQuality(100)
+                options.withAspectRatio(1f,1f)
+                return UCrop.of(Uri.parse(imgFile.absolutePath),Uri.parse((croppedImgFile.absolutePath)))
+                    .withOptions(options)
+                    .getIntent(fragContext)
+            }
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                return intent?.let { UCrop.getOutput(it) }
+            }
+        }
+        cropImageLauncher=registerForActivityResult(cropImageContract){
+            navigateToInfoFragment(File(it?.path!!))
+        }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkAndRequestPermission()
         binding.cameraCaptureButton.setOnClickListener {
-            captureButtonListener()
+            takePhoto()
+            showProgressBar(true)
         }
+    }
+    override fun onDetach() {
+        super.onDetach()
+        cameraExecutor.shutdown()
     }
     companion object {
         private const val TAG = "CameraXBasic"
@@ -88,6 +121,7 @@ class CameraFragment : Fragment() {
             }
             else -> {
                 requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+                showProgressBar(true)
             }
         }
     }
@@ -97,7 +131,7 @@ class CameraFragment : Fragment() {
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(fragContext)
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+            cameraProvider = cameraProviderFuture.get()
             //Preview
             val preview = Preview.Builder()
                 .build()
@@ -106,19 +140,15 @@ class CameraFragment : Fragment() {
                 }
             imageCapture=ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setIoExecutor(cameraExecutor)
                 .build()
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle(fragActivity , cameraSelector,preview,imageCapture)
         }, ContextCompat.getMainExecutor(fragContext))
     }
-    private fun takePhoto() {
+    private fun takePhoto(){
         val imageCapture = imageCapture ?: return
-        imgFile = File(
-            outputDirectory,
-            SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis()) + ".jpg"
-        )
         val outputOptions = ImageCapture.OutputFileOptions.Builder(imgFile).build()
         imageCapture.takePicture(
             outputOptions,
@@ -131,22 +161,29 @@ class CameraFragment : Fragment() {
                     val savedURi = Uri.fromFile(imgFile)
                     val msg = "Photo capture succeeded: $savedURi"
                     Log.d(TAG, msg)
+                    navigateToInfoFragment(imgFile)
+                    showProgressBar(false)
                 }
             }
         )
     }
-    private fun captureButtonListener() {
-        val isPermsGranted=isPermissionGranted()
-        if(isPermsGranted){
-            takePhoto()
-            val action = CameraFragmentDirections.actionCameraFragmentToInfoFragment(imgFile.absolutePath,isPermsGranted)
-            binding.cameraCaptureButton.findNavController().navigate(action)
+    private fun navigateToInfoFragment(imgFile:File){
+        val action = CameraFragmentDirections.actionCameraFragmentToInfoFragment(imgFile.absolutePath,isPermissionGranted())
+        binding.cameraCaptureButton.findNavController().navigate(action)
+        Navigation.createNavigateOnClickListener(R.id.action_cameraFragment_to_infoFragment)
+    }
+    private fun showProgressBar(show:Boolean){
+        if(show){
+            binding.imageSavingProgressBar.visibility=View.VISIBLE
+            binding.loadingImage.visibility=View.VISIBLE
+            binding.cameraCaptureButton.visibility=View.INVISIBLE
+            binding.viewFinder.visibility=View.INVISIBLE
         }
         else{
-            val action=CameraFragmentDirections.actionCameraFragmentToInfoFragment("",isPermsGranted)
-            binding.cameraCaptureButton.findNavController().navigate(action)
+            binding.imageSavingProgressBar.visibility=View.INVISIBLE
+            binding.loadingImage.visibility=View.INVISIBLE
+            binding.cameraCaptureButton.visibility=View.VISIBLE
+            binding.viewFinder.visibility=View.VISIBLE
         }
-        Navigation.createNavigateOnClickListener(R.id.action_cameraFragment_to_infoFragment)
-
     }
 }

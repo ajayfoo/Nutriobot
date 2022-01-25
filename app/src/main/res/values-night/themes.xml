@@ -1,14 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.Nutriobot" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColorD</item>
-        <item name="colorPrimaryVariant">@color/primaryDarkColorD</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondaryColorD</item>
-        <item name="colorSecondaryVariant">@color/secondaryDarkColorD</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="Theme.Nutriobot" parent="Theme.Material3.Dark.NoActionBar"/>
 </resources>

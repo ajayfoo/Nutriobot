@@ -176,7 +176,6 @@
             android:contentDescription="@string/back"
             android:visibility="visible"
             app:icon="@drawable/left_back_arrow"
-            app:iconTint="@color/primaryDarkColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -4,8 +4,6 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
 }
-apply plugin: 'kotlin-android'
-
 android {
     compileSdk 31
 
@@ -74,4 +72,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
     androidTestImplementation "androidx.navigation:navigation-testing:2.3.5"
+    //image cropping library
+    implementation "com.github.yalantis:ucrop:2.2.6-native"
 }

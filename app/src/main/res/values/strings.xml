@@ -16,4 +16,5 @@
     <string name="fat">FAT</string>
     <string name="calories">CALORIES</string>
     <string name="sugar">SUGAR</string>
+    <string name="loading_image">Loading image, please wait..</string>
 </resources>

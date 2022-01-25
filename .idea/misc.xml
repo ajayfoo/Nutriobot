@@ -3,10 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/drawable/camera_pic.xml" value="0.1265625" />
         <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/drawable/left_back_arrow.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/drawable/round_button.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/layout/activity_main.xml" value="0.209375" />
-        <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/layout/fragment_camera.xml" value="0.1" />
+        <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/layout/fragment_camera.xml" value="0.22" />
         <entry key="..\:/Users/asus/AndroidStudioProjects/Nutriobot/app/src/main/res/layout/fragment_info.xml" value="0.22" />
       </map>
     </option>

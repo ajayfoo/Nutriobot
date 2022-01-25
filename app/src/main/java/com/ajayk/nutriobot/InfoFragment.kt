@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajayk.nutriobot.databinding.FragmentInfoBinding
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -48,15 +47,10 @@ class InfoFragment : Fragment() {
             binding.info.text = getText(R.string.cam_perm_help)
             return
         }
-        lifecycleScope.launch{
-            while(!imgFile.exists()){
-                delay(500)
-            }
-            val classifier = Classifier(infoFragContext)
-            val result = classifier.filteredPrediction(imgFile)
-            setInfo(result, infoFragContext)
-            imgFile.delete()
-        }
+        val classifier = Classifier(infoFragContext)
+        val result = classifier.filteredPrediction(imgFile)
+        setInfo(result, infoFragContext)
+        imgFile.delete()
     }
     private fun setInfo(result:Pair<Int,String?>,context: Context){
         if (result.first==-1){
