@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.ajayk.nutriobot">
     <uses-feature android:name="android.hardware.camera.any"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -13,8 +14,10 @@
         android:fullBackupOnly="true"
         android:theme="@style/Theme.Nutriobot">
         <activity
+            tools:ignore="LockedOrientationActivity"
             android:name=".MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +26,10 @@
             </intent-filter>
         </activity>
         <activity
+            tools:ignore="LockedOrientationActivity"
             android:exported="true"
             android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 

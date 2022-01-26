@@ -50,7 +50,7 @@ class InfoFragment : Fragment() {
         val classifier = Classifier(infoFragContext)
         val result = classifier.filteredPrediction(imgFile)
         setInfo(result, infoFragContext)
-        imgFile.delete()
+        imgFile.parentFile?.deleteRecursively()
     }
     private fun setInfo(result:Pair<Int,String?>,context: Context){
         if (result.first==-1){

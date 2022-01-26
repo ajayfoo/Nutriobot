@@ -56,14 +56,18 @@ class CameraFragment : Fragment() {
         super.onAttach(context)
         fragContext=context
         fragActivity=requireActivity()
+        //delete previous photos if any
+        getOutputDirectory().deleteRecursively()
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
-        imgFile = File.createTempFile(
-            "IMG_${SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())}",
-            ".jpg", outputDirectory)
-        croppedImgFile = File.createTempFile(
-            "IMG_${SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())}",
-            ".jpg", outputDirectory)
+        imgFile = File(
+            outputDirectory,
+            SimpleDateFormat(FILENAME_FORMAT, Locale.US
+            ).format(System.currentTimeMillis())+".jpg")
+        croppedImgFile = File(
+            outputDirectory,
+            SimpleDateFormat(FILENAME_FORMAT, Locale.US
+            ).format(System.currentTimeMillis())+"-cropped.jpg")
         requestPermissionLauncher=registerForActivityResult(ActivityResultContracts.RequestPermission()){
                 isGranted: Boolean ->
             if (isGranted){
@@ -77,7 +81,7 @@ class CameraFragment : Fragment() {
                 val options=UCrop.Options()
                 options.setCompressionQuality(100)
                 options.withAspectRatio(1f,1f)
-                return UCrop.of(Uri.parse(imgFile.absolutePath),Uri.parse((croppedImgFile.absolutePath)))
+                return UCrop.of(Uri.fromFile(imgFile),Uri.fromFile(croppedImgFile))
                     .withOptions(options)
                     .getIntent(fragContext)
             }
@@ -86,7 +90,13 @@ class CameraFragment : Fragment() {
             }
         }
         cropImageLauncher=registerForActivityResult(cropImageContract){
-            navigateToInfoFragment(File(it?.path!!))
+            if(it != null){
+                navigateToInfoFragment(File(it.path!!))
+                imgFile.delete()
+            }
+            else{
+                retakePhoto()
+            }
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -162,7 +172,7 @@ class CameraFragment : Fragment() {
                     val savedURi = Uri.fromFile(imgFile)
                     val msg = "Photo capture succeeded: $savedURi"
                     Log.d(TAG, msg)
-                    navigateToInfoFragment(imgFile)
+                    cropImageLauncher.launch(null)
                     showProgressBar(false)
                 }
             }
@@ -176,12 +186,18 @@ class CameraFragment : Fragment() {
     private fun showProgressBar(show:Boolean){
         if(show){
             binding.progressBarLayout.visibility=View.VISIBLE
+            binding.viewFinder.visibility=View.INVISIBLE
             fragActivity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
         else{
             binding.progressBarLayout.visibility=View.GONE
+            binding.viewFinder.visibility=View.VISIBLE
             fragActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
+    }
+    private fun retakePhoto(){
+        imgFile.delete()
+        croppedImgFile.delete()
     }
 }
