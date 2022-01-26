@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
@@ -174,16 +175,13 @@ class CameraFragment : Fragment() {
     }
     private fun showProgressBar(show:Boolean){
         if(show){
-            binding.imageSavingProgressBar.visibility=View.VISIBLE
-            binding.loadingImage.visibility=View.VISIBLE
-            binding.cameraCaptureButton.visibility=View.INVISIBLE
-            binding.viewFinder.visibility=View.INVISIBLE
+            binding.progressBarLayout.visibility=View.VISIBLE
+            fragActivity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
         else{
-            binding.imageSavingProgressBar.visibility=View.INVISIBLE
-            binding.loadingImage.visibility=View.INVISIBLE
-            binding.cameraCaptureButton.visibility=View.VISIBLE
-            binding.viewFinder.visibility=View.VISIBLE
+            binding.progressBarLayout.visibility=View.GONE
+            fragActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
     }
 }

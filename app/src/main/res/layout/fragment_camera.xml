@@ -16,38 +16,7 @@
             android:layout_height="match_parent"
             android:visibility="visible"
             tools:layout_editor_absoluteX="-16dp"
-            tools:layout_editor_absoluteY="-150dp"
-            tools:visibility="visible">
-
-        </androidx.camera.view.PreviewView>
-
-        <ProgressBar
-            android:id="@+id/imageSavingProgressBar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="78dp"
-            android:layout_height="75dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/loadingImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loading_image"
-            android:textColor="#757575"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageSavingProgressBar"
-            app:layout_constraintVertical_bias="0.07999998"
-            tools:visibility="visible" />
+            tools:layout_editor_absoluteY="-150dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/camera_capture_button"
@@ -67,16 +36,47 @@
             app:layout_constraintRight_toRightOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="visible"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progressBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#b0000000"
+            android:visibility="gone"
+            android:focusable="true"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/loadingImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading_image"
+                android:textColor="#757575"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageSavingProgressBar"
+                app:layout_constraintVertical_bias="0.07999998"
+                tools:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/imageSavingProgressBar"
+                android:layout_width="78dp"
+                android:layout_height="75dp"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
