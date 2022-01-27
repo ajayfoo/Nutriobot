@@ -21,6 +21,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+<<<<<<< HEAD
+=======
+        }
+        debug{
+            applicationIdSuffix ".debug"
+            debuggable true
+>>>>>>> a85ec57 (Added app/release directory to .gitignore)
         }
     }
     compileOptions {
