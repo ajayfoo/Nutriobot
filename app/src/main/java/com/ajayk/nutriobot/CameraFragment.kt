@@ -23,10 +23,13 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.ajayk.nutriobot.databinding.FragmentCameraBinding
 import com.yalantis.ucrop.UCrop
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -102,10 +105,8 @@ class CameraFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkAndRequestPermission()
-        binding.cameraCaptureButton.setOnClickListener {
-            takePhoto()
-            showProgressBar(true)
-        }
+        askForCameraPermission()
+        binding.cameraCaptureButton.setOnClickListener { captureButtonListener() }
     }
     override fun onDetach() {
         super.onDetach()
@@ -132,7 +133,6 @@ class CameraFragment : Fragment() {
             }
             else -> {
                 requestPermissionLauncher.launch(REQUIRED_PERMISSION)
-                showProgressBar(true)
             }
         }
     }
@@ -188,7 +188,7 @@ class CameraFragment : Fragment() {
             binding.progressBarLayout.visibility=View.VISIBLE
             binding.viewFinder.visibility=View.INVISIBLE
             fragActivity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
         else{
             binding.progressBarLayout.visibility=View.GONE
@@ -199,5 +199,24 @@ class CameraFragment : Fragment() {
     private fun retakePhoto(){
         imgFile.delete()
         croppedImgFile.delete()
+    }
+    private fun captureButtonListener(){
+        if(isPermissionGranted()){
+            takePhoto()
+            showProgressBar(true)
+            Log.i("funInfo","CapButtonListener, permission was granted")
+        }
+        else{
+            checkAndRequestPermission()
+            Log.i("funInfo","CapButtonListener, permission was not granted")
+        }
+    }
+    private fun askForCameraPermission(){
+        lifecycleScope.launch{
+            while (!isPermissionGranted()) {
+                delay(1000)
+                checkAndRequestPermission()
+            }
+        }
     }
 }

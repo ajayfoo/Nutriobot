@@ -12,22 +12,20 @@ android {
         minSdk 21
         targetSdk 31
         versionCode 2
-        versionName "1.1"
+        versionName "1.0.0-alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-<<<<<<< HEAD
-=======
         }
         debug{
             applicationIdSuffix ".debug"
             debuggable true
->>>>>>> a85ec57 (Added app/release directory to .gitignore)
         }
     }
     compileOptions {
@@ -64,15 +62,15 @@ dependencies {
     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha32"
     //coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     //http library
     implementation "com.android.volley:volley:1.2.1"
     //tensorflow lite support library
-    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.3.1'
     //task lib
-    implementation "org.tensorflow:tensorflow-lite-task-vision:0.3.0"
-    implementation "org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.3.0"
+    implementation 'org.tensorflow:tensorflow-lite-task-vision:0.3.1'
+    implementation 'org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.3.1'
     //fragment
     implementation "androidx.fragment:fragment-ktx:1.4.0"
     //navigation library
