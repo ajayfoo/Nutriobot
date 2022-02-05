@@ -52,17 +52,18 @@ class InfoFragment : Fragment() {
         setInfo(result, infoFragContext)
         imgFile.parentFile?.deleteRecursively()
     }
-    private fun setInfo(result:Pair<Int,String?>,context: Context){
+    private fun setInfo(result:Triple<Int,String,Int>,context: Context){
         if (result.first==-1){
             binding.fruit.text=getText(R.string.unidentified)
             binding.info.text=getText(R.string.unidentified_info)
         }
         else{
-            binding.fruit.text=result.second
+            val fruitWithPercentage=result.second+" ("+result.third.toString()+"%)"
+            binding.fruit.text=fruitWithPercentage
             if(result.first==1){
                 lifecycleScope.launch{
                     val fruityResponse=FruityResponse()
-                    result.second?.let { fruityResponse.requestFruitInfo(it, context ) }
+                    fruityResponse.requestFruitInfo(result.second, context )
                     fruityResponse.formatFruitInfo(context,binding)
                     }
             }

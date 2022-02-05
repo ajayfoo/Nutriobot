@@ -13,6 +13,8 @@ import org.tensorflow.lite.task.vision.classifier.Classifications
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier.ImageClassifierOptions
 import java.io.File
+import kotlin.math.exp
+import kotlin.math.roundToInt
 
 class Classifier(context: Context) {
     private val imgSize=299
@@ -28,8 +30,19 @@ class Classifier(context: Context) {
     private fun argmax(arr:FloatArray):Int{
         return arr.indexOfFirst { num -> num == arr.maxByOrNull { it }}
     }
-
      */
+    private fun softmax(input:Float,neuronValues: FloatArray): Double {
+        val total: Float = neuronValues.asSequence().map { exp(it) }.sum()
+        return exp(input.toDouble()) / total
+    }
+    private fun getProbability(results:MutableList<Category>):Double{
+        val neuronValues=FloatArray(1001)
+        val score=results[0].score
+        for (item in results) {
+            neuronValues[item.index]=item.score
+        }
+        return softmax(score,neuronValues)
+    }
     private fun imageToBitmap(imgFile: File): Bitmap {
         return BitmapFactory.decodeFile(imgFile.absolutePath)
     }
@@ -46,22 +59,23 @@ class Classifier(context: Context) {
         val bmp = imageToBitmap(imgFile)
         return bitmapToTensorImage(bmp)
     }
-    private fun rawPrediction(imgFile: File): Category {
+    private fun rawPrediction(imgFile: File): MutableList<Category> {
         val img = imageToTensorImage(imgFile)
         val results: List<Classifications> = imageClassifier.classify(img)
-        val prediction = results[0].categories
-        return prediction[0]
+        return results[0].categories
     }
-    fun filteredPrediction(imgFile: File):Pair<Int,String>{
+    fun filteredPrediction(imgFile: File):Triple<Int,String,Int>{
         val predictionCat = rawPrediction(imgFile)
-        val index=predictionCat.index
+        val probability=getProbability(predictionCat)
+        val confidence= (probability * 100).roundToInt()
+        val index=predictionCat[0].index
         if(index in 949..956){
-            return Pair(1,predictionCat.label)
+            return Triple(1,predictionCat[0].label,confidence)
         }
         return if((index in 937..948) or (index in listOf(957,958,988))){
-            Pair(0,predictionCat.label)
+            Triple(0,predictionCat[0].label,confidence)
         } else{
-            Pair(-1,"")
+            Triple(-1,"",0)
         }
     }
 }

@@ -17,14 +17,14 @@ android {
             keyPassword keystoreProperties['keyPassword']
         }
     }
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.ajayk.nutriobot"
         minSdk 21
-        targetSdk 31
-        versionCode 3
-        versionName "1.0.1"
+        targetSdk 32
+        versionCode 4
+        versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -86,11 +86,11 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-task-vision:0.3.1'
     implementation 'org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.3.1'
     //fragment
-    implementation "androidx.fragment:fragment-ktx:1.4.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
     //navigation library
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
-    androidTestImplementation "androidx.navigation:navigation-testing:2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.4.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.4.0"
+    androidTestImplementation "androidx.navigation:navigation-testing:2.4.0"
     //image cropping library
     implementation "com.github.yalantis:ucrop:2.2.6-native"
 }
